@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { io } from "socket.io-client";
+import { useState } from "react";
+import "./App.css";
+import Button from "./components/Button";
+import PresenceIndicator from "./components/PresenceIndicator";
+
+let socket;
 
 function App() {
+  const [isConnected, setIsConnected] = useState(false);
+
+  const handleConnect = () => {
+    socket = io("http://localhost:8080", {
+      transports: ["websocket"],
+    });
+
+    socket.on("connect", () => {
+      setIsConnected(true);
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <PresenceIndicator isConnected={isConnected} />
+      <Button handleClick={handleConnect}> {
+        isConnected ? "Disconnect" : "Connect"
+      } </Button>
     </div>
   );
 }
