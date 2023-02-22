@@ -10,21 +10,31 @@ function App() {
   const [isConnected, setIsConnected] = useState(false);
 
   const handleConnect = () => {
-    socket = io("http://localhost:8080", {
-      transports: ["websocket"],
-    });
+    if (isConnected) {
+      socket.disconnect();
+      setIsConnected(false);
+    } else {
+      socket = io("http://localhost:8080", {
+        transports: ["websocket"],
+      });
 
-    socket.on("connect", () => {
-      setIsConnected(true);
-    });
+      socket.on("connect", () => {
+        setIsConnected(true);
+      });
+
+      socket.on("disconnect", () => {
+        setIsConnected(false);
+      });
+    }
   };
 
   return (
     <div className="app">
       <PresenceIndicator isConnected={isConnected} />
-      <Button handleClick={handleConnect}> {
-        isConnected ? "Disconnect" : "Connect"
-      } </Button>
+      <Button handleClick={handleConnect}>
+        {" "}
+        {isConnected ? "Disconnect" : "Connect"}{" "}
+      </Button>
     </div>
   );
 }
