@@ -167,7 +167,6 @@ const createWebRtcTransport = async (callback) => {
       preferUdp: true,
     };
 
-    // https://mediasoup.org/documentation/v3/mediasoup/api/#router-createWebRtcTransport
     let transport = await router.createWebRtcTransport(webRtcTransport_options);
     console.log(`transport id: ${transport.id}`);
 
